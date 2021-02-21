@@ -7,7 +7,7 @@ export default function App () {
   const [city, onChangeCity] = useState('')
 
   async function doClickShowWeather () {
-    const apiId = '078234b00aba953ae546d52635645810'
+    const apiId = 'token'
     try {
       const result = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiId}&lang=de&units=metric`)
       const data = await result.json()
