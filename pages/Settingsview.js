@@ -3,7 +3,7 @@ import { StyleSheet, View, Text } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { Picker } from '@react-native-picker/picker'
 
-import { setViewstate, getViewstate } from '../store/viestate'
+import { setViewstate, getViewstate } from '../store/viewstate'
 import countries from '../components/countries.json'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
