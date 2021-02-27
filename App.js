@@ -5,6 +5,7 @@ import { NavigationContainer, DarkTheme, DefaultTheme } from '@react-navigation/
 import { createStackNavigator } from '@react-navigation/stack'
 
 import HomeView from './pages/Homeview'
+import SettingsView from './pages/Settingsview'
 
 const Stack = createStackNavigator()
 
@@ -14,6 +15,7 @@ export default function App () {
     <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack.Navigator headerMode={false} initialRouteName="Home">
         <Stack.Screen name="Home" component={HomeView} />
+        <Stack.Screen name="Settings" component={SettingsView} />
       </Stack.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>
