@@ -4,7 +4,7 @@ import { useColorScheme } from 'react-native';
 import { NavigationContainer, DarkTheme, DefaultTheme } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 
-import HomeView from './pages/Home'
+import HomeView from './pages/Homeview'
 
 const Stack = createStackNavigator()
 

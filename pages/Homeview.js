@@ -89,7 +89,7 @@ export default function App () {
           style={{ marginLeft: -10 }}
           size={30}
           backgroundColor="transparent"
-          name="menu"
+          name="settings"
         />
         <TextInput
           style={styles.textInputStyle}
