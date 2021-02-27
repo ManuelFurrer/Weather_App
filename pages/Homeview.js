@@ -2,7 +2,9 @@ import React, { useState } from 'react'
 import { StyleSheet, Text, View, PermissionsAndroid, Image, TextInput } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
-export default function App () {
+import { getViewstate } from '../store/viewstate'
+
+export default function App ({ navigation }) {
   const [weatherImg, onChangeWeatherImg] = useState(undefined)
   const [city, onChangeCity] = useState('')
   const [weatherInfo, onChangeWeatherInfo] = useState('')
@@ -13,12 +15,10 @@ export default function App () {
 
   async function getWeatherData (location) {
     const apikey = '078234b00aba953ae546d52635645810'
-    // https://api.openweathermap.org/data/2.5/weather?zip=9000,CH&appid=${apikey}&lang=de&units=metric <-- zip&countryCode
     try {
       const result = await fetch(`https://api.openweathermap.org/data/2.5/weather?${location}&appid=${apikey}&lang=de&units=metric`)
       const data = await result.json()
 
-      console.log(data)
       if (data.cod === 200) {
         onChangeCity(data.name)
         onChangeWeatherInfo(data.weather[0].description)
@@ -63,6 +63,11 @@ export default function App () {
     }
   }
 
+  function doSubmitEditing () {
+    const location = (getViewstate('searchExpr') === 'city') ? `q=${cityInput}` : `zip=${cityInput},${getViewstate('country')}`
+    getWeatherData(location)
+  }
+
   function getPageContent () {
     if (!city) {
       return (<Text style={styles.noDataInfoText}>Gib einen Ort ein um das Wetter anzuzeigen</Text>)
@@ -90,12 +95,13 @@ export default function App () {
           size={30}
           backgroundColor="transparent"
           name="settings"
+          onPress={() => navigation.navigate('Settings')}
         />
         <TextInput
           style={styles.textInputStyle}
           placeholder="Ort"
           value={cityInput}
-          onSubmitEditing={() => getWeatherData(`q=${cityInput}`)}
+          onSubmitEditing={() => doSubmitEditing()}
           onChangeText={text => onChangeCityInput(text)}
         />
         <Icon.Button
