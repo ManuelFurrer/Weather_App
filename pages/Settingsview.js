@@ -8,6 +8,7 @@ import countries from '../components/countries.json'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
 export default function App ({ navigation }) {
+  const [selectedTemperature, setSelectedTemperature] = useState(getViewstate('temperatureUnit'))
   const [selectedCountry, setSelectedCountry] = useState(getViewstate('country'))
   const [searchExpr, setSearchExpr] = useState(getViewstate('searchExpr'))
 
@@ -15,6 +16,11 @@ export default function App ({ navigation }) {
     return countries.map((country, i) => {
       return <Picker.Item label={country.name} value={country.code} key={i} />
     })
+  }
+
+  function doChangeTemperature (value) {
+    setSelectedTemperature(value)
+    setViewstate('temperatureUnit', value)
   }
 
   function doChangeCountry (value) {
@@ -48,7 +54,7 @@ export default function App ({ navigation }) {
       </View>
 
       <View style={{ marginTop: 20 }}>
-        <Text style={{ color: 'white' }}>Suchoption</Text>
+        <Text style={{ color: 'white', fontWeight: 'bold' }}>Suchoption</Text>
         <View style={styles.radioButtonContainer}>
           <Text style={{ color: 'white' }}>Ort</Text>
           <TouchableOpacity onPress={() => doSwitchRadioBtn('city')}>{RadioButton(searchExpr === 'city' ? true : false)}</TouchableOpacity>
@@ -59,12 +65,27 @@ export default function App ({ navigation }) {
         </View>
 
         <View style={{ marginTop: 40 }}>
-          <Text style={{ color: 'white' }}>Land</Text>
+          <Text style={{ color: 'white', fontWeight: 'bold' }}>Temperatur</Text>
           <View style={styles.pickerContainer}>
             <Picker
-              style={styles.countryPicker}
+              style={styles.picker}
+              selectedValue={selectedTemperature}
+              onValueChange={(value) => doChangeTemperature(value)}
+            >
+              <Picker.Item label="Celcius" value="metric" />
+              <Picker.Item label="Fahrenheit" value="imperial" />
+              <Picker.Item label="Kelvin" value="standard" />
+            </Picker>
+          </View>
+        </View>
+
+        <View style={{ marginTop: 40 }}>
+          <Text style={{ color: 'white', fontWeight: 'bold' }}>Land</Text>
+          <View style={styles.pickerContainer}>
+            <Picker
+              style={styles.picker}
               selectedValue={selectedCountry}
-              onValueChange={(itemValue) => doChangeCountry(itemValue)}
+              onValueChange={(value) => doChangeCountry(value)}
             >
               {getCountries()}
             </Picker>
@@ -88,7 +109,7 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'space-between',
   },
-  countryPicker: {
+  picker: {
     height: 50,
     width: 200,
     color: 'white',

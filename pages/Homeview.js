@@ -5,25 +5,29 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 import { getViewstate } from '../store/viewstate'
 
 export default function App ({ navigation }) {
-  const [weatherImg, onChangeWeatherImg] = useState(undefined)
-  const [city, onChangeCity] = useState('')
-  const [weatherInfo, onChangeWeatherInfo] = useState('')
-  const [temperatur, onChangeTemperatur] = useState('')
-  const [cityInput, onChangeCityInput] = useState('')
+  const [weatherImg, setWeatherImg] = useState(undefined)
+  const [city, setCity] = useState('')
+  const [weatherInfo, setWeatherInfo] = useState('')
+  const [cityInput, setCityInput] = useState('')
+  const [temperatureValue, setTemperatureValue] = useState('')
 
   const inDevelopment = process.env.NODE_ENV
 
   async function getWeatherData (location) {
     const apikey = '078234b00aba953ae546d52635645810'
     try {
-      const result = await fetch(`https://api.openweathermap.org/data/2.5/weather?${location}&appid=${apikey}&lang=de&units=metric`)
+      const temperatureUnit = getViewstate('temperatureUnit')
+      const result = await fetch(`https://api.openweathermap.org/data/2.5/weather?${location}&appid=${apikey}&lang=de&units=${temperatureUnit}`)
       const data = await result.json()
 
       if (data.cod === 200) {
-        onChangeCity(data.name)
-        onChangeWeatherInfo(data.weather[0].description)
-        onChangeTemperatur(data.main.temp)
-        onChangeWeatherImg(`https://openweathermap.org/img/wn/${data.weather[0].icon}.png`)
+        setCity(data.name)
+        setWeatherInfo(data.weather[0].description)
+
+        const sign = (temperatureUnit === 'metric') ? '°C' : (temperatureUnit === 'imperial') ? '°F' : 'K'
+        setTemperatureValue(data.main.temp + ' ' + sign)
+
+        setWeatherImg(`https://openweathermap.org/img/wn/${data.weather[0].icon}.png`)
       } else if (data.cod === '404' || data.cod === '400') {
         alert(data.message)
       } else {
@@ -76,7 +80,7 @@ export default function App ({ navigation }) {
         <View style={styles.container}>
           <Text style={styles.textCity}>{city}</Text>
           <Text style={styles.textWeatherInfo}>{weatherInfo}</Text>
-          <Text style={styles.textTemperatur}>{temperatur ? temperatur + '°C' : ''}</Text>
+          <Text style={styles.textTemperature}>{temperatureValue}</Text>
           <Image
             style={styles.image}
             source={{
@@ -102,7 +106,7 @@ export default function App ({ navigation }) {
           placeholder="Ort"
           value={cityInput}
           onSubmitEditing={() => doSubmitEditing()}
-          onChangeText={text => onChangeCityInput(text)}
+          onChangeText={text => setCityInput(text)}
         />
         <Icon.Button
           style={{ marginLeft: 15 }}
@@ -156,7 +160,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     color: '#EFEFEF'
   },
-  textTemperatur: {
+  textTemperature: {
     marginTop: 20,
     fontSize: 60,
     color: '#FFFFFF'

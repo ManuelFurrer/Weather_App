@@ -1,4 +1,5 @@
 let viewstate = {
+  temperatureUnit: 'metric',
   country: 'CH',
   searchExpr: 'city'
 }
