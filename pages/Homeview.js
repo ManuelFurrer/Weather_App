@@ -14,7 +14,7 @@ export default function App ({ navigation }) {
   const inDevelopment = process.env.NODE_ENV
 
   async function getWeatherData (location) {
-    const apikey = '078234b00aba953ae546d52635645810'
+    const apikey = 'apikey'
     try {
       const temperatureUnit = getViewstate('temperatureUnit')
       const result = await fetch(`https://api.openweathermap.org/data/2.5/weather?${location}&appid=${apikey}&lang=de&units=${temperatureUnit}`)
